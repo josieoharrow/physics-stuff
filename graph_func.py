@@ -34,36 +34,42 @@ fourth_polynomial = scipy.poly1d(np.multiply(m1, fourth_polynomial_consts))
 #Declare the base function
 f = first_polynomial(x_array - x0) + second_polynomial(x_array - x1) + third_polynomial(x_array - x0) + fourth_polynomial(x_array - x1)
 
-#Integral functions
-integ_1 = first_polynomial.integ()
-integ_2 = second_polynomial.integ()
-integ_3 = third_polynomial.integ()
-integ_4 = fourth_polynomial.integ()
-i = integ_1 + integ_2 + integ_3 + integ_4
+#Todo: Fix "f_func". I don't know why yet but this is broken and it is the key to having actual interpolation.
+f_func = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
+d = f_func(x_array - x0)
+
+#Integral function
 g = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
-b = g*g#.integ()
+b = g*g
 c = b.integ()
 f_magnitude = (c(1) - c(0))
+
+#just the values, we want the function.
 p = f/f_magnitude
+#p_func is broken because it is derived from f_func. But it wiiiill work :,)
+p_func = f_func/f_magnitude
 
 #Print info
 print('a0, a1, a2, a3: ', a0, a1, a2, a3)
+print('========== Polynomials: ==========')
 print(first_polynomial)
 print(second_polynomial)
 print(third_polynomial)
 print(fourth_polynomial)
-print(integ_1)
-print(c(1) - c(0))
-print(b(x1) - b(x0))
-print(i(x1) - i(x0))
+print('========== P func: ==========')
+print(p_func)
+print('========== F magnitude: ==========')
+print(f_magnitude)
 
 #Plot
 plt.plot(x_array, first_polynomial(x_array - x0))
 plt.plot(x_array, second_polynomial(x_array - x1))
 plt.plot(x_array, third_polynomial(x_array - x0))
 plt.plot(x_array, fourth_polynomial(x_array - x1))
-plt.plot(x_array, p)#(x_array - x1))
-
+#Commented out for now because they are all messed up
+#plt.plot(x_array, f_func(x_array - x1))
+#plt.plot(x_array, p_func(x_array - x1))
+plt.plot(x_array, p)
 plt.plot(x_array, f)
 
 plt.ylabel('Derived polynomial functions')
