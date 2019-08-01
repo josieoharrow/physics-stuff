@@ -31,22 +31,38 @@ c0, c1, c2, c3 = 0, float(-1) - float(m1), float(-1)/delta_x, float(m1)/delta_x_
 fourth_polynomial_consts = [c3, c2, c1, c0]
 fourth_polynomial = scipy.poly1d(np.multiply(m1, fourth_polynomial_consts))
 
+#Declare the base function
+f = first_polynomial(x_array - x0) + second_polynomial(x_array - x1) + third_polynomial(x_array - x0) + fourth_polynomial(x_array - x1)
+
+#Integral functions
+integ_1 = first_polynomial.integ()
+integ_2 = second_polynomial.integ()
+integ_3 = third_polynomial.integ()
+integ_4 = fourth_polynomial.integ()
+i = integ_1 + integ_2 + integ_3 + integ_4
+g = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
+b = g*g#.integ()
+c = b.integ()
+f_magnitude = (c(1) - c(0))
+p = f/f_magnitude
+
 #Print info
 print('a0, a1, a2, a3: ', a0, a1, a2, a3)
 print(first_polynomial)
 print(second_polynomial)
 print(third_polynomial)
 print(fourth_polynomial)
-print(f)
-print(f.integ())
+print(integ_1)
+print(c(1) - c(0))
+print(b(x1) - b(x0))
+print(i(x1) - i(x0))
 
 #Plot
-f = first_polynomial(x_array - x0) + second_polynomial(x_array - x1) + third_polynomial(x_array - x0) + fourth_polynomial(x_array - x1)
-
 plt.plot(x_array, first_polynomial(x_array - x0))
 plt.plot(x_array, second_polynomial(x_array - x1))
 plt.plot(x_array, third_polynomial(x_array - x0))
 plt.plot(x_array, fourth_polynomial(x_array - x1))
+plt.plot(x_array, p)#(x_array - x1))
 
 plt.plot(x_array, f)
 
