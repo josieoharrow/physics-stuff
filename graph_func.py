@@ -30,10 +30,14 @@ f_func = first_polynomial + second_polynomial + third_polynomial + fourth_polyno
 d = f_func(x_array - x0)
 
 #Integral function
+#Todo: We can't just add up these polynomials because they are for different x inputs (regions or x as you may say)
+#So this integral needs to be computed manually probably.
+#Wait, is that true? If our bounds are huge, does the small difference matter? YES this is true. Our constants our based on
+#their input so we can't just add the polys up and integrate over bigger bounds.
 g = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
-b = g*g
-c = b.integ()
-f_magnitude = (c(1) - c(0))
+j = g.integ()
+print(j)
+f_magnitude = (j(1000000) - j(-1000000))
 
 #just the values, we want the function.
 p = f/f_magnitude
@@ -52,13 +56,12 @@ print(f_magnitude)
 
 #Plot
 if(len(sys.argv) > 1):
+    
     plt.plot(x_array, first_polynomial(x_array - x0))
     plt.plot(x_array, second_polynomial(x_array - x1))
     plt.plot(x_array, third_polynomial(x_array - x0))
     plt.plot(x_array, fourth_polynomial(x_array - x1))
-    #Commented out for now because they are all messed up
-    #plt.plot(x_array, f_func(x_array - x1))
-    #plt.plot(x_array, p_func(x_array - x1))
+
     plt.plot(x_array, p)
     plt.plot(x_array, f)
 

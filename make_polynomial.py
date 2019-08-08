@@ -35,5 +35,4 @@ class Constants:
         return [0, 1, float(-2)/self.delta_x, float(1)/self.delta_x_squared]
 
     def m1_consts(self):
-        return [0, float(1), float(2)/self.delta_x, float(1)/self.delta_x_squared]
-    
+        return [0, float(1), float(2)/self.delta_x, float(1)/self.delta_x_squared]    
