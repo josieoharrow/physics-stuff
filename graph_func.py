@@ -27,6 +27,25 @@ second_polynomial = mp.scale_polynomial(y1, mp.make_cubic(consts.y1_consts()))
 third_polynomial = mp.scale_polynomial(m0, mp.make_cubic(consts.m0_consts()))
 fourth_polynomial = mp.scale_polynomial(m1, mp.make_cubic(consts.m1_consts()))
 
+def our_a(x):
+    if -delta_x < x < 0:
+        return 1 - 3*x**2/delta_x**2 - 2*x**3/delta_x**3
+    elif 0 < x < delta_x:
+        print('returning ', x, delta_x, 1 - 3*x**2/delta_x**2 + 2*x**3/delta_x**3)
+        return 1 - 3*x**2/delta_x**2 + 2*x**3/delta_x**3
+    else:
+        return 0.
+our_a = np.vectorize(our_a)
+
+def our_b(x):
+    if -delta_x < x < 0:
+        return x + 2*x**2/delta_x + x**3/delta_x**2
+    elif 0 < x < delta_x:
+        return x - 2*x**2/delta_x + x**3/delta_x**2
+    else:
+        return 0.
+our_b = np.vectorize(our_b)
+
 #Declare the base function
 f = first_polynomial(x_array - x0) + second_polynomial(x_array - x1) + third_polynomial(x_array - x0) + fourth_polynomial(x_array - x1)
 
@@ -37,10 +56,18 @@ f = first_polynomial(x_array - x0) + second_polynomial(x_array - x1) + third_pol
 #their input so we can't just add the polys up and integrate over bigger bounds.
 f_func = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
 d = f_func(x_array - x0)
-g = first_polynomial + second_polynomial + third_polynomial + fourth_polynomial
-j = g.integ()
-f_magnitude = (j(1000000) - j(-1000000))
+i_1 = first_polynomial.integ()
+i_2 = second_polynomial.integ()
+i_3 = third_polynomial.integ()
+i_4 = fourth_polynomial.integ()
 
+v_1 = i_1(x1 - x0) - i_1(x0 - x0)
+v_2 = i_2(x1 - x1) - i_2(x0 - x1)
+v_3 = i_3(x1 - x0) - i_3(x0 - x0)
+v_4 = i_4(x1 - x1) - i_4(x0 - x1)
+
+f_magnitude = v_1 + v_2 + v_3 + v_4
+print(f_magnitude)
 #just the values, we want the function.
 p = f/f_magnitude
 p_func = f_func/f_magnitude
@@ -82,9 +109,17 @@ if(len(sys.argv) > 1):
     plt.plot(x_array, third_polynomial(x_array - x0))
     plt.plot(x_array, fourth_polynomial(x_array - x1))
 
-    plt.plot(x_array, f)
-    plt.plot(before_x_array, f_before)
-    plt.plot(after_x_array, f_after)
+    #plt.plot(x_array, f)
+    #plt.plot(x_array, p)
+    #plt.plot(before_x_array, f_before)
+    #plt.plot(after_x_array, f_after)
+
+    x = np.linspace(x0-2*delta_x, x1+2*delta_x, 1000)
+    plt.plot(x, y0*our_a(x-x0) + m0*our_b(x-x0) + y1*our_a(x-x1) + m1*our_b(x-x1), ':')
 
     plt.ylabel('Derived polynomial functions')
+    plt.figure()
+    x = np.linspace(-2*delta_x, 2*delta_x, 1000)
+    plt.plot(x, our_a(x))
+    plt.plot(x, our_b(x))
     plt.show()    
